@@ -452,14 +452,8 @@ class XMLStream {
 			} else if ($updated > 0) {
 				$buff = '';
 				do {
-					if ($buff != '') {
-						//disable blocking for now because fread() will
-						// block until the 4k are full if we already
-						// read a part of the packet
-						stream_set_blocking($this->socket, 0);
-					}
-					$part = fread($this->socket, 4096);
 					stream_set_blocking($this->socket, 1);
+					$part = fread($this->socket, 4096);
 
 					if (!$part) {
 						if($this->reconnect) {
