@@ -451,9 +451,22 @@ class XMLStream {
 				}
 			} else if ($updated > 0) {
 				$buff = '';
+				$parse_xml = true;
 				do {
-					stream_set_blocking($this->socket, 1);
+					if ($buff != '') {
+						//disable blocking for now because fread() will
+						// block until the 4k are full if we already
+						// read a part of the packet
+						stream_set_blocking($this->socket, 0);
+					}
 					$part = fread($this->socket, 4096);
+					stream_set_blocking($this->socket, 1);
+
+					// // Hack for Google FCM sending random whitespace even when no data
+					// if ($buff === '' && trim($part) === '') {
+					// 	$parse_xml = false;
+					// 	break;
+					// }
 
 					if (!$part) {
 						if($this->reconnect) {
@@ -468,9 +481,11 @@ class XMLStream {
 					$buff .= $part;
 				} while (!$this->bufferComplete($buff));
 
-				xml_parse($this->parser, $buff, false);
-				if ($return_when_received) {
-					return true;
+				if ($parse_xml) {
+					xml_parse($this->parser, $buff, false);
+					if ($return_when_received) {
+						return true;
+					}
 				}
 			} else {
 				# $updated == 0 means no changes during timeout.
