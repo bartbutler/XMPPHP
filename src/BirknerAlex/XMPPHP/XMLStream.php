@@ -462,20 +462,17 @@ class XMLStream {
 					$part = fread($this->socket, 4096);
 					stream_set_blocking($this->socket, 1);
 
-					// // Hack for Google FCM sending random whitespace even when no data
-					// if ($buff === '' && trim($part) === '') {
-					// 	$parse_xml = false;
-					// 	break;
-					// }
+					// Hack for Google FCM sending random whitespace even when no data
+					if ($buff === '' && trim($part) === '') {
+						$parse_xml = false;
+						break;
+					}
 
 					if (!$part) {
-						if($this->reconnect) {
-							$this->doReconnect();
-						} else {
-							fclose($this->socket);
-							$this->socket = NULL;
-							return false;
-						}
+						// Reconnects make no sense within the stanza
+						fclose($this->socket);
+						$this->socket = NULL;
+						return false;
 					}
 					$this->log->log("RECV: $part",  Log::LEVEL_VERBOSE);
 					$buff .= $part;
