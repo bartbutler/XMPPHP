@@ -121,11 +121,11 @@ class XMLStream {
 	/**
 	 * @var string
 	 */
-	protected $until = '';
+	protected $until = [];
 	/**
 	 * @var string
 	 */
-	protected $until_count = '';
+	protected $until_count = [];
 	/**
 	 * @var array
 	 */
@@ -133,7 +133,7 @@ class XMLStream {
 	/**
 	 * @var array
 	 */
-	protected $until_payload = array();
+	protected $until_payload = [];
 	/**
 	 * @var Log
 	 */
