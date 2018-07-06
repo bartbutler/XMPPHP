@@ -671,13 +671,15 @@ class XMLStream {
 					$handler[3]->{$handler[2]}($this->xmlobj[2]);
 				}
 			}
-			foreach($this->idhandlers as $id => $handler) {
-				if(array_key_exists('id', $this->xmlobj[2]->attrs) and $this->xmlobj[2]->attrs['id'] == $id) {
-					if($handler[1] === null) $handler[1] = $this;
-					$handler[1]->{$handler[0]}($this->xmlobj[2]);
-					#id handlers are only used once
-					unset($this->idhandlers[$id]);
-					break;
+			if (is_array($this->xmlobj) && array_key_exists(2, $this->xmlobj)) {
+				foreach($this->idhandlers as $id => $handler) {
+					if(array_key_exists('id', $this->xmlobj[2]->attrs) && $this->xmlobj[2]->attrs['id'] == $id) {
+						if($handler[1] === null) $handler[1] = $this;
+						$handler[1]->{$handler[0]}($this->xmlobj[2]);
+						#id handlers are only used once
+						unset($this->idhandlers[$id]);
+						break;
+					}
 				}
 			}
 			if(is_array($this->xmlobj)) {
