@@ -683,9 +683,9 @@ class XMLStream {
 				}
 			}
 			if(is_array($this->xmlobj)) {
-				$this->xmlobj = array_slice($this->xmlobj, 0, 1);
-				if(isset($this->xmlobj[0]) && $this->xmlobj[0] instanceof XMLObj) {
-					$this->xmlobj[0]->subs = null;
+				$this->xmlobj = array_slice($this->xmlobj, 0, 1, true);
+				if(isset($this->xmlobj[1]) && $this->xmlobj[1] instanceof XMLObj) {
+					$this->xmlobj[1]->subs = array();
 				}
 			}
 			unset($this->xmlobj[2]);
